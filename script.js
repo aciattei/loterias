@@ -1,5 +1,5 @@
 // URL da API
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'https://loterias-vql6.onrender.com';
 
 // Elementos do DOM
 const btnAtualizar = document.getElementById('btnAtualizar');
