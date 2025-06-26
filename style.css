@@ -1,7 +1,7 @@
 :root {
-    --primary-color: #4CAF50;
-    --primary-dark: #45a049;
-    --secondary-color: #2196F3;
+    --primary-color: #c87fc3;
+    --primary-dark: #930089;
+    --secondary-color: #0065b7;
     --warning-color: #ff9800;
     --danger-color: #f44336;
     --light-gray: #f5f5f5;
@@ -256,7 +256,7 @@ h4 {
     left: -5px;
     right: -5px;
     bottom: -5px;
-    border: 2px solid var(--warning-color);
+    border: 2px solid var(--primary-dark);
     border-radius: 50%;
 }
 
@@ -349,7 +349,7 @@ h4 {
 }
 
 .wheel-number.delayed {
-    background-color: rgba(255, 152, 0, 0.1);
+    background-color: rgba(109, 1, 139, 0.1);
 }
 
 .wheel-number.suggested::after {
@@ -383,12 +383,12 @@ h4 {
 }
 
 .color-box.delayed {
-    background-color: rgba(255, 152, 0, 0.3);
-    border: 1px solid var(--warning-color);
+    background-color: rgba(147, 0, 137, 0.3);
+    border: 1px solid var(--primary-dark);
 }
 
 .color-box.suggested {
-    background-color: rgba(76, 175, 80, 0.3);
+    background-color: rgba(200, 127, 195, 0.3);
     border: 1px solid var(--primary-color);
 }
 

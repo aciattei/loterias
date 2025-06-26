@@ -23,8 +23,8 @@ function initCharts() {
             datasets: [{
                 label: 'Concursos sem sair',
                 data: delayedNumbersData.map(item => item.delay),
-                backgroundColor: 'rgba(255, 159, 64, 0.7)',
-                borderColor: 'rgba(255, 159, 64, 1)',
+                backgroundColor: 'rgba(200, 127, 195, 0.7)',
+                borderColor: 'rgba(200, 127, 195, 1)',
                 borderWidth: 1
             }]
         },
