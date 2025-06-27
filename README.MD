@@ -1,7 +1,7 @@
-<h1 align="center">Analisador Lotofácil - Estatísticas Transparentes</h1>
+<h1 align="center">Analisador Loterias</h1>
 
 <h2>Descrição</h2>
-<p>O Analisador Lotofácil é uma aplicação web que fornece análises estatísticas sobre os resultados históricos da loteria Lotofácil. O projeto tem como objetivo mostrar padrões e tendências nos sorteios de forma transparente, sempre lembrando que a Lotofácil é um jogo de sorte pura e que nenhuma análise estatística pode prever números com certeza.</p>
+<p>O Analisador Loterias é uma aplicação web que fornece análises estatísticas sobre os resultados históricos das loterias Lotofácil e Mega Sena. O projeto tem como objetivo mostrar padrões e tendências nos sorteios de forma transparente, sempre lembrando que a Lotofácil e a Mega Sena são jogos de sorte pura e que nenhuma análise estatística pode prever números com certeza.</p>
 
 <h2>Funcionalidades Principais</h2>
 <ul>
@@ -33,8 +33,7 @@
 <h2>Como Executar o Projeto</h2>
 <ol>
 <li>Clone este repositório:</li>
-No bash
-git clone [URL_DO_REPOSITÓRIO]
+<p>No bash: git clone [URL_DO_REPOSITÓRIO]</p>
 <li>Abra o arquivo index.html em qualquer navegador moderno.</li>
 <li>Explore as diferentes seções da aplicação:</li>
 <ul>
