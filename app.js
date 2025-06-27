@@ -18,9 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let delayedNumbers = [];
     let suggestedGames = [];
     
-    // Inicialização
-    init();
-    
+  
     // Event Listeners
     updateDataBtn.addEventListener('click', updateData);
     generateGamesBtn.addEventListener('click', generateSuggestedGames);
