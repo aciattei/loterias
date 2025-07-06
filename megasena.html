@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analisador Mega-Sena</title>
+    <link rel="stylesheet" href="style-megasena.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <img src="logo-megasena.png" alt="Logo Mega-Sena">
+                <h1>Analisador Mega-Sena</h1>
+            </div>
+            <p class="subtitle">Estatisticamente Transparente</p>
+        </header>
+
+        <div class="disclaimer warning">
+            <strong>⚠️ ATENÇÃO:</strong> A Mega-Sena é um jogo de sorte pura. Nenhuma análise estatística pode prever números com certeza.
+        </div>
+
+        <main>
+            <section class="data-section">
+                <div class="section-header">
+                    <h2>📊 Dados Históricos</h2>
+                    <button id="updateData" class="btn primary">Atualizar Dados</button>
+                </div>
+                
+                <div class="info-cards">
+                    <div class="info-card">
+                        <div class="card-value" id="lastContest">--</div>
+                        <div class="card-label">Último Concurso</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="card-value" id="contestDate">--/--/----</div>
+                        <div class="card-label">Data do Sorteio</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="card-value" id="daysSince">--</div>
+                        <div class="card-label">Dias desde o último</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="card-value" id="totalContests">--</div>
+                        <div class="card-label">Concursos analisados</div>
+                    </div>
+                </div>
+                
+                <div class="loading" id="dataLoading">
+                    <div class="spinner"></div>
+                    <span>Carregando dados...</span>
+                </div>
+            </section>
+
+            <section class="analysis-section">
+                <h2>🔍 Análise Estatística</h2>
+                <div class="disclaimer info">
+                    Os padrões abaixo são apenas curiosidades estatísticas. NÃO existem números "quentes" ou "frios" na realidade.
+                </div>
+                
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="delays">Atrasos</button>
+                    <button class="tab-btn" data-tab="pairs">Pares</button>
+                    <button class="tab-btn" data-tab="predictions">Previsões</button>
+                </div>
+                
+                <div class="tab-content active" id="delays">
+                    <h3>Números mais atrasados</h3>
+                    <div class="chart-container">
+                        <canvas id="delaysChart"></canvas>
+                    </div>
+                    <div class="numbers-grid" id="delayedNumbers"></div>
+                </div>
+                
+                <div class="tab-content" id="pairs">
+                    <h3>Pares mais frequentes</h3>
+                    <div class="pairs-container">
+                        <div class="pairs-list">
+                            <h4>Pares que mais saíram juntos</h4>
+                            <ul id="topPairs"></ul>
+                        </div>
+                        <div class="pairs-list">
+                            <h4>Pares que menos saíram juntos</h4>
+                            <ul id="bottomPairs"></ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="predictions">
+                    <h3>Análise de Tendências</h3>
+                    <div class="chart-container">
+                        <canvas id="trendsChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <section class="games-section">
+                <div class="section-header">
+                    <h2>🎯 Sugestões de Jogos</h2>
+                    <button id="generateGames" class="btn primary">Gerar Jogos</button>
+                </div>
+                
+                <div class="disclaimer info">
+                    Estes jogos são gerados por um algoritmo que combina diferentes estatísticas. Lembre-se: isso NÃO aumenta suas chances de ganhar.
+                </div>
+                
+                <div class="games-container" id="suggestedGames"></div>
+                
+                <div class="probability-info">
+                    <p>Probabilidade de acertar os 6 números: <strong>1 em 50.063.860</strong></p>
+                    <p>(Aposta simples de 6 números – R$ 5,00)</p>
+                </div>
+            </section>
+        </main>
+
+        <section class="wheel-section">
+            <h2>🎰 Volante Mega-Sena</h2>
+            <div class="wheel-container" id="megaSenaWheel"></div>
+            <div class="wheel-legend">
+                <div class="legend-item">
+                    <div class="color-box delayed"></div>
+                    <span>Números atrasados</span>
+                </div>
+                <div class="legend-item">
+                    <div class="color-box suggested"></div>
+                    <span>Sugeridos nos jogos</span>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>Este projeto é apenas para fins educacionais e de entretenimento.</p>
+            <p>A Mega-Sena é uma loteria oficial da Caixa Econômica Federal.</p>
+            <p>Desenvolvido com ❤️ para amantes de estatística</p>
+        </footer>
+    </div>
+
+    <script src="app-megasena.js"></script>
+    <script src="chart-megasena.js"></script>
+</body>
+</html>
