@@ -95,7 +95,7 @@ class MegaSenaApp {
     }
 
     async loadFromJsonApi() {
-        console.log('🌐 Carregando últimos concursos via API JSON da CAIXA...');
+        console.log('🌐 Carregando TODOS os concursos via API JSON da CAIXA...');
         
         // Primeiro, buscar o último concurso (API sem número retorna o último)
         let lastConcurso = null;
@@ -115,56 +115,77 @@ class MegaSenaApp {
             lastConcurso = 2800; // Estimativa
         }
         
-        // Buscar os últimos 100 concursos
-        console.log(`📥 Baixando concursos ${lastConcurso - 99} até ${lastConcurso}...`);
+        const statusEl = document.getElementById('loadStatus');
         
-        const promises = [];
-        for (let i = 0; i < 100; i++) {
-            const concursoNum = lastConcurso - i;
-            promises.push(
-                fetch(`https://servicebus2.caixa.gov.br/portaldeloterias/api/megasena/${concursoNum}`)
-                    .then(r => r.ok ? r.json() : null)
-                    .catch(() => null)
-            );
+        // Buscar TODOS os concursos desde o concurso 1
+        const firstConcurso = 1; // Primeiro concurso da Mega-Sena
+        const totalConcursos = lastConcurso - firstConcurso + 1;
+        
+        console.log(`📥 Baixando TODOS os ${totalConcursos} concursos (${firstConcurso} até ${lastConcurso})...`);
+        statusEl.textContent = `Baixando ${totalConcursos} concursos da CAIXA...`;
+        
+        // Baixar em lotes de 50 para não sobrecarregar e mostrar progresso
+        const batchSize = 50;
+        const allDraws = [];
+        
+        for (let start = firstConcurso; start <= lastConcurso; start += batchSize) {
+            const end = Math.min(start + batchSize - 1, lastConcurso);
+            const currentBatch = end - start + 1;
+            const progress = Math.round(((start - firstConcurso) / totalConcursos) * 100);
+            
+            console.log(`📦 Baixando lote: concursos ${start} até ${end} (${progress}% concluído)`);
+            statusEl.textContent = `Baixando concursos ${start}-${end}... (${progress}% concluído)`;
+            
+            const promises = [];
+            for (let i = start; i <= end; i++) {
+                promises.push(
+                    fetch(`https://servicebus2.caixa.gov.br/portaldeloterias/api/megasena/${i}`)
+                        .then(r => r.ok ? r.json() : null)
+                        .catch(() => null)
+                );
+            }
+            
+            const results = await Promise.all(promises);
+            
+            const draws = results
+                .filter(r => r && r.numero && r.listaDezenas && r.listaDezenas.length === 6)
+                .map(r => {
+                    // Processar data
+                    let dataObj = new Date();
+                    if (r.dataApuracao) {
+                        dataObj = new Date(r.dataApuracao);
+                    }
+                    
+                    return {
+                        concurso: r.numero,
+                        data: dataObj,
+                        ano: dataObj.getFullYear(),
+                        bolas: r.listaDezenas.map(n => String(n).padStart(2, '0'))
+                    };
+                });
+            
+            allDraws.push(...draws);
+            console.log(`✅ Lote concluído: ${draws.length} concursos válidos. Total acumulado: ${allDraws.length}`);
         }
         
-        const results = await Promise.all(promises);
-        
-        const draws = results
-            .filter(r => r && r.numero && r.listaDezenas && r.listaDezenas.length === 6)
-            .map(r => {
-                // Processar data
-                let dataObj = new Date();
-                if (r.dataApuracao) {
-                    dataObj = new Date(r.dataApuracao);
-                }
-                
-                return {
-                    concurso: r.numero,
-                    data: dataObj,
-                    ano: dataObj.getFullYear(),
-                    bolas: r.listaDezenas.map(n => String(n).padStart(2, '0'))
-                };
-            });
-        
-        if (draws.length === 0) {
+        if (allDraws.length === 0) {
             throw new Error('Nenhum concurso encontrado via API JSON');
         }
         
-        console.log(`✅ ${draws.length} concursos carregados com sucesso via API JSON!`);
+        console.log(`✅ ${allDraws.length} concursos carregados com sucesso via API JSON!`);
         
-        draws.sort((a, b) => a.concurso - b.concurso);
-        this.allDraws = draws;
+        allDraws.sort((a, b) => a.concurso - b.concurso);
+        this.allDraws = allDraws;
         
         const currentYear = new Date().getFullYear();
-        this.currentYearDraws = draws.filter(d => d.ano === currentYear);
+        this.currentYearDraws = allDraws.filter(d => d.ano === currentYear);
         
         if (this.currentYearDraws.length === 0) {
             console.warn('⚠️  Nenhum sorteio do ano atual, usando últimos 50');
-            this.currentYearDraws = draws.slice(-50);
+            this.currentYearDraws = allDraws.slice(-50);
         }
         
-        console.log(`📊 Análise: ${this.currentYearDraws.length} sorteios do ano ${currentYear}`);
+        console.log(`📊 Análise completa: ${allDraws.length} sorteios desde 1996, ${this.currentYearDraws.length} do ano ${currentYear}`);
     }
 
     async tryDownload(url) {
@@ -458,8 +479,8 @@ class MegaSenaApp {
         }
         
         const lastDraw = this.allDraws[this.allDraws.length - 1];
-        const years = [...new Set(this.allDraws.map(d => d.ano))].sort();
-        const oldestYear = Math.min(...years);
+        const years = [...new Set(this.allDraws.map(d => d.ano))].filter(y => !isNaN(y)).sort();
+        const oldestYear = years.length > 0 ? Math.min(...years) : new Date().getFullYear();
         const currentYear = new Date().getFullYear();
         
         document.getElementById('lastConcurso').textContent = lastDraw.concurso;
