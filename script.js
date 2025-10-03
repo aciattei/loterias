@@ -100,19 +100,40 @@ class MegaSenaApp {
         // Primeiro, buscar o último concurso (API sem número retorna o último)
         let lastConcurso = null;
         try {
-            const response = await fetch('https://servicebus2.caixa.gov.br/portaldeloterias/api/megasena');
+            const response = await fetch('https://servicebus2.caixa.gov.br/portaldeloterias/api/megasena', {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+            
             if (response.ok) {
                 const data = await response.json();
-                lastConcurso = data.numero;
-                console.log(`📍 Último concurso detectado: ${lastConcurso}`);
+                // Tentar diferentes campos possíveis
+                lastConcurso = data.numero || data.concurso || data.numeroConcurso || null;
+                
+                if (lastConcurso) {
+                    console.log(`📍 Último concurso detectado via API: ${lastConcurso}`);
+                    console.log(`📅 Data do concurso: ${data.dataApuracao || data.data || 'N/A'}`);
+                } else {
+                    console.warn('⚠️ API retornou dados mas sem número de concurso identificável');
+                    console.log('Estrutura recebida:', Object.keys(data));
+                }
+            } else {
+                console.warn(`⚠️ API retornou status ${response.status}`);
             }
         } catch (e) {
-            console.warn('Não conseguiu detectar último concurso, usando estimativa');
+            console.warn('❌ Erro ao buscar último concurso:', e.message);
         }
         
-        // Se não conseguiu, usar estimativa
+        // Se não conseguiu pela API, tentar descobrir o último concurso válido
         if (!lastConcurso) {
-            lastConcurso = 2800; // Estimativa
+            console.log('🔍 Tentando descobrir o último concurso por tentativa e erro...');
+            lastConcurso = await this.findLastConcurso();
+        }
+        
+        if (!lastConcurso) {
+            throw new Error('Não foi possível determinar o último concurso. Verifique sua conexão com a internet.');
         }
         
         const statusEl = document.getElementById('loadStatus');
@@ -186,6 +207,72 @@ class MegaSenaApp {
         }
         
         console.log(`📊 Análise completa: ${allDraws.length} sorteios desde 1996, ${this.currentYearDraws.length} do ano ${currentYear}`);
+    }
+
+    async findLastConcurso() {
+        // Tentar encontrar o último concurso por tentativa e erro
+        // Começando com uma estimativa baseada na data atual
+        const anoAtual = new Date().getFullYear();
+        const anosDesde1996 = anoAtual - 1996;
+        // Aproximadamente 100-120 sorteios por ano
+        let estimativa = Math.floor(anosDesde1996 * 110);
+        
+        console.log(`🎯 Estimativa inicial: concurso ${estimativa}`);
+        
+        // Tentar alguns números ao redor da estimativa
+        const tentativas = [
+            estimativa,
+            estimativa + 50,
+            estimativa + 100,
+            estimativa + 150,
+            estimativa - 50,
+            2900, // Estimativas fixas como fallback
+            2850,
+            2800,
+            2750
+        ];
+        
+        for (const concursoNum of tentativas) {
+            try {
+                const response = await fetch(`https://servicebus2.caixa.gov.br/portaldeloterias/api/megasena/${concursoNum}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data && (data.numero || data.concurso)) {
+                        console.log(`✅ Concurso ${concursoNum} existe! Usando como referência.`);
+                        // Verificar se há um concurso mais recente
+                        const next = await this.checkNextConcurso(concursoNum);
+                        return next || concursoNum;
+                    }
+                }
+            } catch (e) {
+                // Continuar tentando
+            }
+        }
+        
+        return null;
+    }
+
+    async checkNextConcurso(baseNum) {
+        // Verificar se há concursos mais recentes
+        console.log(`🔎 Procurando concursos após ${baseNum}...`);
+        
+        for (let offset = 1; offset <= 100; offset++) {
+            try {
+                const response = await fetch(`https://servicebus2.caixa.gov.br/portaldeloterias/api/megasena/${baseNum + offset}`);
+                if (!response.ok) {
+                    // Se este não existe, o anterior era o último
+                    const lastValid = baseNum + offset - 1;
+                    console.log(`✅ Último concurso encontrado: ${lastValid}`);
+                    return lastValid;
+                }
+            } catch (e) {
+                const lastValid = baseNum + offset - 1;
+                console.log(`✅ Último concurso encontrado: ${lastValid}`);
+                return lastValid;
+            }
+        }
+        
+        return baseNum + 100; // Se todos os 100 seguintes existem, retornar baseNum + 100
     }
 
     async tryDownload(url) {
