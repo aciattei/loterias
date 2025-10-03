@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analisador Mega-Sena</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎰 Analisador Mega-Sena</h1>
+            <p>Análise estatística completa dos sorteios</p>
+        </header>
+
+        <main>
+            <!-- Carregar Dados -->
+            <section class="section">
+                <h2>📊 Carregar Dados</h2>
+                <button id="btnLoadData" class="btn btn-primary">Carregar Dados da CAIXA</button>
+                <div id="loadStatus" class="status"></div>
+                <div id="dataInfo" class="info-box hidden">
+                    <p><strong>Último concurso:</strong> <span id="lastConcurso">-</span></p>
+                    <p><strong>Sorteios do ano atual:</strong> <span id="totalYearDraws">-</span></p>
+                </div>
+            </section>
+
+            <!-- Análise dos Números -->
+            <section id="sectionAnalysis" class="section hidden">
+                <h2>📈 Análise Estatística</h2>
+                
+                <div class="analysis-summary">
+                    <div class="summary-card">
+                        <h3>Números Mais Sorteados</h3>
+                        <div id="mostDrawnNumbers" class="number-list"></div>
+                    </div>
+                    <div class="summary-card">
+                        <h3>Números Menos Sorteados</h3>
+                        <div id="leastDrawnNumbers" class="number-list"></div>
+                    </div>
+                </div>
+
+                <h3>Todos os Números (passe o mouse para detalhes)</h3>
+                <div id="allNumbersGrid" class="numbers-grid"></div>
+            </section>
+
+            <!-- Gerar Jogos -->
+            <section id="sectionGenerate" class="section hidden">
+                <h2>🎲 Gerar Jogos</h2>
+                <div class="form-group">
+                    <label for="numGames">Quantos jogos você quer fazer?</label>
+                    <input type="number" id="numGames" min="1" max="20" value="1">
+                </div>
+                <div class="form-group">
+                    <label for="numNumbers">Quantos números por jogo? (6 a 15)</label>
+                    <input type="number" id="numNumbers" min="6" max="15" value="6">
+                </div>
+                <button id="btnGenerate" class="btn btn-success">Gerar Jogos</button>
+                <div id="generatedGames" class="games-container"></div>
+            </section>
+
+            <!-- Jogo Manual -->
+            <section id="sectionManual" class="section hidden">
+                <h2>✋ Registrar Jogo Manual</h2>
+                <p>Selecione de 6 a 15 números:</p>
+                <div id="manualGrid" class="numbers-grid selectable"></div>
+                <div class="manual-actions">
+                    <div id="selectedNumbers" class="selected-display"></div>
+                    <button id="btnClearSelection" class="btn btn-secondary">Limpar</button>
+                    <button id="btnSaveManual" class="btn btn-success">Salvar Jogo</button>
+                </div>
+            </section>
+
+            <!-- Jogos Salvos -->
+            <section id="sectionSaved" class="section hidden">
+                <h2>💾 Seus Jogos Salvos</h2>
+                <div id="savedGames" class="games-container"></div>
+            </section>
+
+            <!-- Conferir Último Sorteio -->
+            <section id="sectionCheck" class="section hidden">
+                <h2>🔍 Conferir Último Sorteio</h2>
+                <button id="btnCheck" class="btn btn-info">Conferir Jogos</button>
+                <div id="checkResults" class="check-results"></div>
+            </section>
+        </main>
+
+        <!-- Tooltip -->
+        <div id="tooltip" class="tooltip hidden"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

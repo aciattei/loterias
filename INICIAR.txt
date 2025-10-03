@@ -1,0 +1,91 @@
+═══════════════════════════════════════════════════════════
+🎰 ANALISADOR MEGA-SENA - INSTRUÇÕES DE USO
+═══════════════════════════════════════════════════════════
+
+📌 PROBLEMA: O navegador bloqueia o download por CORS
+
+✅ SOLUÇÃO 1: Usar Servidor Proxy (RECOMENDADO)
+═══════════════════════════════════════════════════════════
+
+1. Abra o Prompt de Comando (CMD) ou Terminal nesta pasta
+
+2. Execute o servidor proxy:
+   
+   python proxy_server.py
+
+3. Abra o navegador e acesse:
+   
+   http://localhost:8000
+
+4. Use o aplicativo normalmente!
+
+═══════════════════════════════════════════════════════════
+
+✅ SOLUÇÃO 2: Python Simple Server
+═══════════════════════════════════════════════════════════
+
+1. No terminal, execute:
+
+   python -m http.server 8000
+
+2. Abra o navegador:
+
+   http://localhost:8000
+
+3. Instale extensão CORS no navegador:
+   - Chrome/Edge: "Allow CORS: Access-Control-Allow-Origin"
+   - Firefox: "CORS Everywhere"
+
+4. Use o aplicativo
+
+═══════════════════════════════════════════════════════════
+
+✅ SOLUÇÃO 3: Dados Simulados (Demonstração)
+═══════════════════════════════════════════════════════════
+
+Se o download falhar, o aplicativo usa dados simulados
+automaticamente para você testar todas as funcionalidades.
+
+═══════════════════════════════════════════════════════════
+
+📝 VERIFICAR LOGS
+═══════════════════════════════════════════════════════════
+
+1. Abra o aplicativo
+2. Pressione F12 (Console do Navegador)
+3. Clique em "Carregar Dados da CAIXA"
+4. Observe os logs detalhados
+
+Você verá:
+- ✅ Download bem-sucedido
+- ✅ Arquivo extraído do ZIP
+- ✅ Planilha lida
+- ✅ Concursos processados
+
+Ou:
+- ❌ Erro de CORS → Use servidor proxy
+- ❌ Erro de rede → Verifique internet
+- ⚠️  Fallback para dados simulados
+
+═══════════════════════════════════════════════════════════
+
+🚀 FUNCIONALIDADES
+═══════════════════════════════════════════════════════════
+
+✓ Análise estatística completa
+✓ Números mais/menos sorteados
+✓ Tooltips com informações detalhadas
+✓ Geração inteligente de jogos
+✓ Criação de jogos manuais
+✓ Conferência automática de resultados
+✓ Armazenamento local dos jogos
+
+═══════════════════════════════════════════════════════════
+
+❓ DÚVIDAS?
+═══════════════════════════════════════════════════════════
+
+Leia o arquivo README.md para mais informações detalhadas!
+
+═══════════════════════════════════════════════════════════
+
